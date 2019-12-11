@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.wangyi.pre_02_aop.aspectJ.ClickBehavior;
+import com.wangyi.pre_02_aop.aspectJ.LoginBehavior;
 
 public class OrderActivity extends AppCompatActivity {
 
@@ -26,21 +27,25 @@ public class OrderActivity extends AppCompatActivity {
     @ClickBehavior("登录")
     public void login(View view) {
         Log.e(TAG, "login: ");
+
     }
 
     @ClickBehavior("我的积分")
+    @LoginBehavior
     public void score(View view) {
         Log.e(TAG, "score: ");
         startActivity(new Intent(this,LoginedActivity.class));
     }
 
     @ClickBehavior("我的优惠券")
+    @LoginBehavior
     public void coupon(View view) {
         Log.e(TAG, "coupon: ");
         startActivity(new Intent(this,LoginedActivity.class));
     }
 
     @ClickBehavior("我的专区")
+    @LoginBehavior
     public void area(View view) {
         Log.e(TAG, "area: ");
         startActivity(new Intent(this,LoginedActivity.class));
