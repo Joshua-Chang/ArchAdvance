@@ -1,2 +1,2 @@
-include ':Pre_01'
+include ':Pre_01_Design', ':pre_01_adapter', ':pre_02_aop'
 rootProject.name='ArchAdvance'
