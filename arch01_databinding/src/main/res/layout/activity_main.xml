@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DataBinding编码规范 -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 定义该View（布局）需要绑定的数据来源 -->
+<!--    name:名称 type:绝对类名-->
+
+
+<!--    build时生成配置文件-->
+<!--    build/intermediates/data_binding_layout_info_type_merge/debug/mergeDebugResources/out/activity_main-layout.xml-->
+    <data>
+        <variable
+            name="user"
+            type="com.wangyi.arch01_databinding.model.UserInfo" />
+    </data>
+
+
+    <!--    build时生成布局文件(每一个都添加tag)-->
+<!--arch01_databinding/build/intermediates/incremental/mergeDebugResources/stripped.dir/layout/activity_main.xml-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@={user.name}" /><!--    加等号双向绑定-->
+
+        <EditText
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.pwd}" /><!--    不加等号单向绑定-->
+    </LinearLayout>
+</layout>

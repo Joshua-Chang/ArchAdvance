@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+<!--    &lt;!&ndash; 定义该布局需要绑定的数据名称和类型 &ndash;&gt;-->
+<!--    <data>-->
+<!--        <variable-->
+<!--            name="userInfo"-->
+<!--            type="com.wangyi.arch_01_mvvm.model.UserInfo" />-->
+<!--    </data>-->
+
+<!--    &lt;!&ndash; 下部分内容和平时布局文件一样 &ndash;&gt;-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:addTextChangedListener="@{loginViewModel.nameInputListener}"-->
+<!--            android:hint="请输入账户"-->
+<!--            android:text="@{userInfo.name}" />-->
+
+<!--        <EditText-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="20dp"-->
+<!--            android:addTextChangedListener="@{loginViewModel.pwdInputListener}"-->
+<!--            android:hint="请输入密码"-->
+<!--            android:text="@{userInfo.pwd}" />-->
+
+
+    </LinearLayout>
+</layout>
