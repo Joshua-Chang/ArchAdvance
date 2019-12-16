@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wangyi.server">
+    package="com.wangyi.arch03_pms">
 
     <application
         android:allowBackup="true"
@@ -16,17 +16,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!--        是否能被系统实例化\是否能被其他应用隐式调用\使用该服务自动创建进程-->
-        <service
-            android:name=".service.LoginService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":remote_server">
-            <intent-filter>
-                <action android:name="BinderServer_Action" />
-            </intent-filter>
-        </service>
     </application>
 
 </manifest>

@@ -17,7 +17,6 @@ public class ResultService extends Service {
         return new ILoginInterface.Stub() {
             @Override
             public void login() throws RemoteException {
-                Log.e("xxx","server_LoginService");
                 serviceStartActivity();
             }
 

@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.wangyi.arch03_binder_client"
+        applicationId "com.wangyi.arch03_pms"
         minSdkVersion 27
         targetSdkVersion 29
         versionCode 1

@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     private void initBindService() {
         Intent intent=new Intent();
         intent.setAction("BinderClient_Action");
-        intent.setPackage("com.wangyi.client");
+        intent.setPackage("com.wangyi.arch03_binder_server");
         bindService(intent,conn,BIND_AUTO_CREATE);
         isStartRemote=true;
     }
@@ -91,6 +91,7 @@ public class MainActivity extends Activity {
                                 finish();
                             } else {
                                 Toast.makeText(MainActivity.this, "QQ登录失败", Toast.LENGTH_SHORT).show();
+                                finish();
                             }
                             dialog.dismiss();
                             iLogin.loginCallback(loginStatus, name);

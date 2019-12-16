@@ -20,7 +20,7 @@
             android:name=".ResultService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote">
+            android:process=":remote_client">
             <intent-filter>
                 <action android:name="BinderClient_Action" />
             </intent-filter>
