@@ -65,11 +65,16 @@ public class MainActivity extends AppCompatActivity {
 //                handler1.sendMessageDelayed(message, 3000);
 
                 // 2、为什么不能在子线程创建Handler
-                 new Handler();
+//                java.lang.RuntimeException: Can't create handler inside thread Thread[Thread-2,5,main] that has not called Looper.prepare()
+//                 new Handler();
 
-                // 3、textView.setText()只能在主线程执行，这句话是错误！
-                // textView.setText("彭老师");
+//                 3、textView.setText()只能在主线程执行，这句话是错误！
+//                SystemClock.sleep(1000);
+                //    ViewRootImpl->requestLayout->checkThread时android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
+//                textView.setText("彭老师");
 //                Toast.makeText(MainActivity.this, "彭老师", Toast.LENGTH_SHORT).show();
+                //java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
+                //requestLayout早于invalidate,ViewRootImpl->requestLayout->checkThread时
             }
         }).start();
     }
