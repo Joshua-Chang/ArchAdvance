@@ -1,2 +1,2 @@
-include ':pre01_Design', ':pre01_adapter', ':pre02_aop', ':arch01_mvc', ':arch01_mvp', ':arch01_mvp2', ':arch01_mvvm', ':arch01_databinding', ':arch02_handler', ':arch02_handler_m', ':arch03_binder_client', ':arch03_binder_server', ':arch03_pms'
+include ':pre01_Design', ':pre01_adapter', ':pre02_aop', ':arch01_mvc', ':arch01_mvp', ':arch01_mvp2', ':arch01_mvvm', ':arch01_databinding', ':arch02_handler', ':arch02_handler_m', ':arch03_binder_client', ':arch03_binder_server', ':arch03_pms', ':arch03_skin'
 rootProject.name='ArchAdvance'

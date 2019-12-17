@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <!-- 本地/内置换肤颜色（日间） -->
+    <color name="commonTextColor">#008577</color>
+    <color name="commonTextColor1">#ffffff</color>
+
+    <!-- 背景 -->
+    <color name="skin_my_background">@android:color/holo_blue_light</color>
+    <color name="skin_my_textColor">@android:color/black</color>
+    <color name="skin_item_color">@android:color/white</color>
+    <color name="skin_icon_color">@android:color/holo_red_light</color>
+</resources>
