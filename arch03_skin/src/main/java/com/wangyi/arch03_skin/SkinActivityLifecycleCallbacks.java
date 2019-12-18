@@ -16,6 +16,12 @@ import java.lang.reflect.Field;
 public class SkinActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
     private String TAG = "xxx";
     public static SkinFactory skinFactory;
+
+    /**
+     * 在setContentView前设置factory2,在super.onCreate(savedInstanceState);之后
+     * @param activity
+     * @param savedInstanceState
+     */
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(activity);

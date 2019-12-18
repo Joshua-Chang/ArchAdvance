@@ -5,7 +5,7 @@
  * Date:2016-5-19 下午2:24:22
  * Copyright (c) 2016, simon@cmonbaby.com All Rights Reserved.
  */
-package com.wangyi.arch03_skin;
+package com.wangyi.arch03_skinlib.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -57,7 +57,7 @@ import java.util.Map;
  */
 public class PreferencesUtils {
 
-    public static String PREFERENCE_NAME = "com.wangyi.arch03_skin";
+    public static String PREFERENCE_NAME = "com.netease.skin";
 
     /**
      * put string preferences

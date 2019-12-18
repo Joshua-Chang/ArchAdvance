@@ -7,6 +7,8 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
+import com.wangyi.arch03_skinlib.utils.PreferencesUtils;
+
 public class NightActivity extends AppCompatActivity {
 
     @Override
