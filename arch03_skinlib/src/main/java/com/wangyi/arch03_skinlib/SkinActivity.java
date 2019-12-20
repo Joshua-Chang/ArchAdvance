@@ -4,11 +4,13 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.LayoutInflaterCompat;
@@ -77,12 +79,37 @@ public class SkinActivity extends AppCompatActivity {
         }
 
         View decorView = getWindow().getDecorView();
-        applyDayNightForView(decorView);
+        applyViews(decorView);
     }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void defaultSkin(int themeColorId) {
+        this.skinDynamic(null, themeColorId);
+    }
+
+    /**
+     * 动态换肤（api限制：5.0版本）
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void skinDynamic(String skinPath, int themeColorId) {
+        SkinManager.getInstance().loaderSkinResources(skinPath);
+
+        if (themeColorId != 0) {
+            int themeColor = SkinManager.getInstance().getColor(themeColorId);
+            StatusBarUtils.forStatusBar(this, themeColor);
+            NavigationUtils.forNavigation(this, themeColor);
+            ActionBarUtils.forActionBar(this, themeColor);
+        }
+
+        applyViews(getWindow().getDecorView());
+    }
+
     /**
      * 回调接口 给具体控件换肤操作
      */
-    protected void applyDayNightForView(View view) {
+    protected void applyViews(View view) {
         if (view instanceof ViewsMatch) {
             ViewsMatch viewsMatch = (ViewsMatch) view;
             viewsMatch.skinnableView();
@@ -92,7 +119,7 @@ public class SkinActivity extends AppCompatActivity {
             ViewGroup parent = (ViewGroup) view;
             int childCount = parent.getChildCount();
             for (int i = 0; i < childCount; i++) {
-                applyDayNightForView(parent.getChildAt(i));
+                applyViews(parent.getChildAt(i));
             }
         }
     }

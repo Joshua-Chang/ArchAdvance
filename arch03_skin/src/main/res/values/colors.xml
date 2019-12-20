@@ -11,6 +11,12 @@
     <!-- 背景 -->
     <color name="skin_my_background">@android:color/holo_blue_light</color>
     <color name="skin_my_textColor">@android:color/black</color>
-    <color name="skin_item_color">@android:color/white</color>
+<!--    <color name="skin_item_color">@android:color/white</color>-->
     <color name="skin_icon_color">@android:color/holo_red_light</color>
+
+    <!-- 皮肤包颜色 -->
+    <!-- 换肤对应皮肤包颜色 -->
+    <color name="skin_background">#008577</color>
+    <color name="skin_textColor">#000000</color>
+    <color name="skin_item_color">#FFFFFF</color>
 </resources>
