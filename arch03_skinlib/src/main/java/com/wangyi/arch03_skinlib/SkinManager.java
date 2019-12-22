@@ -10,7 +10,11 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.wangyi.arch03_skinlib.model.SkinCache;
+
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 皮肤管理器
@@ -24,10 +28,12 @@ public class SkinManager {
     private String skinPackageName; // 皮肤包资源所在包名（注：皮肤包不在app内，也不限包名）
     private boolean isDefaultSkin = true; // 应用默认皮肤（app内置）
     private static final String ADD_ASSET_PATH = "addAssetPath"; // 方法名
+    private Map<String, SkinCache> cacheSkin;
 
     private SkinManager(Application application) {
         this.application = application;
         appResources = application.getResources();
+        cacheSkin=new HashMap<>();
     }
 
     public static SkinManager getInstance() {
@@ -57,6 +63,15 @@ public class SkinManager {
         }
 
         // 优化：app冷启动、热启动可以取缓存对象
+        if (cacheSkin.containsKey(skinPath)) {
+            isDefaultSkin=false;
+            SkinCache skinCache = cacheSkin.get(skinPath);
+            if (null!=skinCache) {
+                skinResources=skinCache.getSkinResources();
+                skinPackageName=skinCache.getSkinPackageName();
+                return;
+            }
+        }
 
         try {
             // 创建资源管理器（此处不能用：application.getAssets()）
@@ -82,6 +97,10 @@ public class SkinManager {
             // 无法获取皮肤包应用的包名，则加载app内置资源
             isDefaultSkin = TextUtils.isEmpty(skinPackageName);
             Log.e("xxx", skinPackageName);
+
+            if (!isDefaultSkin) {
+                cacheSkin.put(skinPath,new SkinCache(skinResources,skinPackageName));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             // 发生异常，预判：通过skinPath获取skinPacakageName失败！
