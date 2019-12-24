@@ -16,6 +16,7 @@ ext {
     appId = [
             arch04_gradle   : "com.wangyi.arch04_gradle",
             arch04_gradlelib: "com.wangyi.arch04_gradlelib",
+            arch05_plugin: "com.wangyi.arch05_plugin",
     ]
     // 生产/开发环境URL
     url = [

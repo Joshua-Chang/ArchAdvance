@@ -1,0 +1,40 @@
+apply plugin: 'com.android.application'
+
+// 赋值与引用
+def androidId = rootProject.ext.androidId
+def appId = rootProject.ext.appId
+def depend = rootProject.ext.dependencies//不可与下面重复
+def url = rootProject.ext.url
+android {
+    compileSdkVersion androidId.compileSdkVersion
+    buildToolsVersion androidId.buildToolsVersion
+
+
+    defaultConfig {
+        applicationId appId.arch04_gradle
+        minSdkVersion androidId.minSdkVersion
+        targetSdkVersion androidId.targetSdkVersion
+        versionCode androidId.versionCode
+        versionName androidId.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+
+    buildTypes {
+        debug{
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    depend.each{k,v->implementation v}
+    implementation project(":arch05_plugin_std")
+}
