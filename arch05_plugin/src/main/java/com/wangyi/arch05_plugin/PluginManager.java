@@ -99,16 +99,18 @@ public class PluginManager {
         String pluginPath = file.getAbsolutePath();
 
 
-        Class<?> mPackageParserClass = null;
+
         try {
-            mPackageParserClass = Class.forName("android.content.pm.pa.PackageParser");
+//            1.加载PackageParser
+            Class<?> mPackageParserClass = Class.forName("android.content.pm.PackageParser");
             Object mPackageParser = mPackageParserClass.newInstance();
+//            2. 加载PackageParser.parsePackage() 返回Package
             Method parserClassMethod = mPackageParserClass.getMethod("parsePackage", File.class, int.class);
             Object mPackage = parserClassMethod.invoke(mPackageParser, file, PackageManager.GET_ACTIVITIES);
 
-
-            Field parserClassField = mPackageParserClass.getDeclaredField("receivers");
-            ArrayList arrayList = (ArrayList) parserClassField.get(mPackageParser);
+//            3.分析Package得到receivers 本质为ArrayList集合
+            Field parserClassField = mPackage.getClass().getDeclaredField("receivers");
+            ArrayList arrayList = (ArrayList) parserClassField.get(mPackage);
             // 此Activity 不是组件的Activity，是PackageParser里面的内部类
             for (Object mActivity : arrayList) {
                 // mActivity --> <receiver android:name=".StaticReceiver">
@@ -116,14 +118,13 @@ public class PluginManager {
                 // 通过反射拿到 intents
 
                 // 获取 <intent-filter>    intents== 很多 Intent-Filter
-                // 通过反射拿到 Component内部类里的intents
+                // 4。通过反射拿到 Component内部类里的intents---》5.1intentFilter
                 Class mComponentClass = Class.forName("android.content.pm.PackageParser$Component");//内部类Component
                 Field intentsField = mComponentClass.getDeclaredField("intents");
                 ArrayList<IntentFilter> intents = (ArrayList) intentsField.get(mActivity); // intents 所属的对象是mActivity
 
-                for (IntentFilter intentFilter : intents) {
-//                    context.registerReceiver(,intentFilter);
-                }
+
+//                5。通过PackageParser解析AndroidManifest得到的intentFilter和静态注册广播的name去注册
                 // 我们还有一个任务，就是要拿到 android:name=".StaticReceiver"
                 // activityInfo.name; == android:name=".StaticReceiver"
                 // 分析源码 如何 拿到 ActivityInfo
@@ -145,6 +146,7 @@ public class PluginManager {
                         , int.class, mPackageUserState, int.class);
                 generateActivityInfoMethod.setAccessible(true);
                 // 执行此方法，拿到ActivityInfo 静态方法不需要执行对象
+//                5.2获取ActivityInfo并拿到ActivityInfo内的名称
                 ActivityInfo mActivityInfo = (ActivityInfo) generateActivityInfoMethod.invoke(null,mActivity, 0, mPackageUserState.newInstance(), userId);
                 String receiverClassName = mActivityInfo.name; // com.netease.plugin_package.StaticReceiver
 

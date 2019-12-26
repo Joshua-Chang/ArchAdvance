@@ -53,4 +53,15 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("className", activityInfo.name);
         startActivity(intent);
     }
+    // 注册 插件里面 配置的 静态广播接收者
+    public void loadStaticReceiver(View view) {
+        PluginManager.getInstance(this).parserApkAction();
+    }
+
+    // 发送静态广播
+    public void sendStaticReceiver(View view) {
+        Intent intent = new Intent();
+        intent.setAction("plugin.static_receiver");
+        sendBroadcast(intent);
+    }
 }
