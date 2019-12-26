@@ -2,6 +2,7 @@ package com.wangyi.arch04_pluginpackage;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -53,5 +54,12 @@ public class BaseActivity extends Activity implements ActivityInterface {
         Intent intentNew = new Intent();
         intentNew.putExtra("className", intent.getComponent().getClassName());
         appActivity.startActivity(intentNew);
+    }
+    @Override
+    public ComponentName startService(Intent service) {
+        Intent intentNew = new Intent();
+        intentNew.putExtra("className", service.getComponent().getClassName()); // TestService 全类名
+//        intentNew.setPackage(appActivity.getPackageName());
+        return appActivity.startService(intentNew);
     }
 }
