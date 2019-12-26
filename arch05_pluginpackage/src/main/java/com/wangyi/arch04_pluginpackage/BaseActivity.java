@@ -2,8 +2,10 @@ package com.wangyi.arch04_pluginpackage;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 
@@ -61,5 +63,15 @@ public class BaseActivity extends Activity implements ActivityInterface {
         intentNew.putExtra("className", service.getComponent().getClassName()); // TestService 全类名
 //        intentNew.setPackage(appActivity.getPackageName());
         return appActivity.startService(intentNew);
+    }
+
+    @Override
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        return appActivity.registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void sendBroadcast(Intent intent) {
+        appActivity.sendBroadcast(intent);
     }
 }

@@ -32,5 +32,18 @@
         android:layout_height="wrap_content"
         android:text="插件内部跳转插件的Service"
         />
+    <Button
+        android:id="@+id/bt_register_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="插件内部注册插件的广播接收者"
+        />
+
+    <Button
+        android:id="@+id/bt_send_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="插件内部发送广播"
+        />
 
 </LinearLayout>
