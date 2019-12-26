@@ -1,7 +1,9 @@
 package com.wangyi.arch05_plugin;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
@@ -125,11 +127,37 @@ public class PluginManager {
                 // 我们还有一个任务，就是要拿到 android:name=".StaticReceiver"
                 // activityInfo.name; == android:name=".StaticReceiver"
                 // 分析源码 如何 拿到 ActivityInfo
+                //generateActivityInfo返回ActivityInfo
 
                 Class mPackageUserState = Class.forName("android.content.pm.PackageUserState");
 
+                //UserHandle.getCallingUserId() -->获取userId
                 Class mUserHandle = Class.forName("android.os.UserHandle");
                 int userId = (int) mUserHandle.getMethod("getCallingUserId").invoke(null);
+
+
+                /**
+                 * 执行此方法，就能拿到 ActivityInfo
+                 * public static final ActivityInfo generateActivityInfo(Activity a, int flags,
+                 *             PackageUserState state, int userId)
+                 */
+                Method  generateActivityInfoMethod = mPackageParserClass.getDeclaredMethod("generateActivityInfo", mActivity.getClass()
+                        , int.class, mPackageUserState, int.class);
+                generateActivityInfoMethod.setAccessible(true);
+                // 执行此方法，拿到ActivityInfo 静态方法不需要执行对象
+                ActivityInfo mActivityInfo = (ActivityInfo) generateActivityInfoMethod.invoke(null,mActivity, 0, mPackageUserState.newInstance(), userId);
+                String receiverClassName = mActivityInfo.name; // com.netease.plugin_package.StaticReceiver
+
+                Class mStaticReceiverClass = getDexClassLoader().loadClass(receiverClassName);
+
+                BroadcastReceiver broadcastReceiver = (BroadcastReceiver) mStaticReceiverClass.newInstance();
+
+                for (IntentFilter intentFilter : intents) {
+
+                    // 注册广播
+                    context.registerReceiver(broadcastReceiver, intentFilter);
+
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
