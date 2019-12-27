@@ -1,12 +1,14 @@
 package com.wangyi.arch05_hook;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.ComponentName;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
@@ -20,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = (Button) findViewById(R.id.button);
+        Button button2 = (Button) findViewById(R.id.button2);
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, TestActivity.class));
+//            }
+//        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,14 +37,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         // 在不修改以上代码的情况下，通过Hook把 ((Button) v).getText() 内容给修改
-        try {
-            hook(button); // button就是View对象
-        } catch (Exception e) {
-            e.printStackTrace();
 
-            Toast.makeText(this, "Hook失败" + e.toString(), Toast.LENGTH_SHORT).show();
-        }
+//        try {
+//            hook(button); // button就是View对象
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//
+//            Toast.makeText(this, "Hook失败" + e.toString(), Toast.LENGTH_SHORT).show();
+//        }
+
     }
+
 
     /**
      * public void setOnClickListener(@Nullable OnClickListener l) {
@@ -114,5 +126,19 @@ public class MainActivity extends AppCompatActivity {
         // 狸猫换太子 把系统的 mOnClickListener  换成 我们自己写的 动态代理
         mOnClickListenerField.set(mListenerInfo, mOnClickListenerProxy); // 替换的 我们自己的动态代理
 //        等同于mListenerInfo.setmOnClickListener=mOnClickListenerProxy --》将ListenerInfo对象内的mOnClickListener变量设置为mOnClickListenerProxy
+    }
+
+//    /**
+//     * 启动TestActivity
+//     * @param view
+//     */
+    public void startTestActivity(View view) {
+//         startActivity(new Intent(this, Test2Activity.class));
+
+//        Intent intent = new Intent(this, TestActivity.class);
+
+        Intent intent=new Intent();
+        intent.setComponent(new ComponentName("com.wangyi.arch05_hook","com.wangyi.arch05_hook.TestActivity"));
+        startActivity(intent);
     }
 }
