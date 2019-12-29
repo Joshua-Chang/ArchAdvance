@@ -6,6 +6,8 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 
@@ -73,5 +75,27 @@ public class BaseActivity extends Activity implements ActivityInterface {
     @Override
     public void sendBroadcast(Intent intent) {
         appActivity.sendBroadcast(intent);
+    }
+
+
+    /**
+     * 合并式Hook
+     * @return
+     */
+
+    @Override
+    public Resources getResources() {
+        if (getApplication() != null && getApplication().getResources() != null) {
+            return getApplication().getResources();
+        }
+        return super.getResources();
+    }
+
+    @Override
+    public AssetManager getAssets() {
+        if (getApplication() != null && getApplication().getAssets() != null) {
+            return getApplication().getAssets();
+        }
+        return super.getAssets();
     }
 }
