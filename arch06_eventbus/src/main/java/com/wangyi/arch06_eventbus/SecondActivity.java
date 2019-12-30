@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,19 +18,19 @@ public class SecondActivity extends AppCompatActivity {
 
     public void post(View view) {
 //        EventBus.getDefault().post("simon");
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
-    @Subscribe(sticky = true)
-    public void event(String s){
-        Log.e(">>>",s+":sticky");
-    }
+//    @Subscribe(sticky = true)
+//    public void event(String s){
+//        Log.e(">>>",s+":sticky");
+//    }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this);
-        }
+//        if (EventBus.getDefault().isRegistered(this)) {
+//            EventBus.getDefault().unregister(this);
+//        }
     }
 }

@@ -6,20 +6,13 @@ android {
 
 
     defaultConfig {
-        applicationId "com.wangyi.arch06_eventbus"
+        applicationId "com.wangyi.arch07_fastjson"
         minSdkVersion 27
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        // 给注解处理器传参
-        javaCompileOptions {
-            annotationProcessorOptions {
-//                arguments = [ eventBusIndex : 'com.wangyi.arch06_eventbus.MyEventBusIndex' ]
-                arguments = [packageName: 'com.wangyi.arch06_eventbus.apt', className: 'MyEventBusIndex']
-            }
-        }
     }
 
     buildTypes {
@@ -39,10 +32,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    // 依赖第三方库：EventBus
-//    implementation 'org.greenrobot:eventbus:3.1.1'
-//    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
-    implementation project(':EventBusAnnotation')
-    implementation project(':eventbuslibrary')
-    annotationProcessor project(':EventBusProcessor')
 }
