@@ -17,7 +17,7 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
 //                arguments = [ eventBusIndex : 'com.wangyi.arch06_eventbus.MyEventBusIndex' ]
-                arguments = [packageName: 'com.wangyi.arch06_eventbus.apt', className: 'MyEventBusIndex']
+                arguments = [packageName: 'com.wangyi.arch06_eventbus.apt', className: 'EventBusIndex']
             }
         }
     }
