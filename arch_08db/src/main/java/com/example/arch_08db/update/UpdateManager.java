@@ -38,7 +38,7 @@ public class UpdateManager {
             // 得到每个用户得数据库对象
             SQLiteDatabase database = getDb(user.getId());
             if (database == null) {
-                return;
+                continue;
             }
             for (UpdateDb updateDb : updateDbs) {
                 String sql_rename = updateDb.getSql_rename();
@@ -47,7 +47,7 @@ public class UpdateManager {
                 String sql_delete = updateDb.getSql_delete();
                 String[] sqls = new String[]{sql_rename,sql_create,sql_insert,sql_delete};
                 executeSql(database,sqls);
-                Log.i("netease",user.getId()+"用户数据库升级成功");
+                Log.i(">>>",user.getId()+"用户数据库升级成功");
             }
         }
     }
@@ -138,7 +138,7 @@ public class UpdateManager {
         SQLiteDatabase sqlDb = null;
         File file = new File("data/data/com.example.arch_08db/u_" + id + "_private.db");
         if (!file.exists()) {
-            Log.e("netease", file.getAbsolutePath() + "数据库不存在");
+            Log.e(">>>", file.getAbsolutePath() + "数据库不存在");
             return null;
         }
         return SQLiteDatabase.openOrCreateDatabase(file, null);
