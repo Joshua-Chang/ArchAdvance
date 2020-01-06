@@ -1,4 +1,5 @@
 # OkHttp
+## 主线原理
 
 ```java
 OkHttpClient okHttpClient=new OkHttpClient.Builder().build();//OkHttpClient构建者
@@ -122,6 +123,29 @@ final class AsyncCall extends NamedRunnable {
   }
 }
 ```
+拦截器责任链模式 
+```java
+Response getResponseWithInterceptorChain() throws IOException {
+  // Build a full stack of interceptors.
+  List<Interceptor> interceptors = new ArrayList<>();
+  interceptors.addAll(client.interceptors());//用户自定义的拦截器
+  interceptors.add(retryAndFollowUpInterceptor);
+  interceptors.add(new BridgeInterceptor(client.cookieJar()));
+  interceptors.add(new CacheInterceptor(client.internalCache()));
+  interceptors.add(new ConnectInterceptor(client));
+  if (!forWebSocket) {
+    interceptors.addAll(client.networkInterceptors());
+  }
+  interceptors.add(new CallServerInterceptor(forWebSocket));
+
+  Interceptor.Chain chain = new RealInterceptorChain(interceptors, null, null, null, 0,
+      originalRequest, this, eventListener, client.connectTimeoutMillis(),
+      client.readTimeoutMillis(), client.writeTimeoutMillis());
+
+  return chain.proceed(originalRequest);
+}
+```
+
 AsyncCall父类NamedRunnable
 ```java
 public abstract class NamedRunnable implements Runnable {
@@ -143,4 +167,97 @@ public abstract class NamedRunnable implements Runnable {
 
   protected abstract void execute();
 }
+```
+
+## 线程池原理
+
+分析结果：OKHTTP里面的线程池，采用的是缓存 方案
+OKHTTP里面的线程池：采用的是缓存 方案，+ 线程工厂 name  不是守护线程
+
+---> 总结：OKHTTP线程池采用的是缓存方案 + 定义线程工程（设置线程名，设置不是守护线程）
+缓存方案：参数1 == 0
+         参数2 Integer.Max
+         参数3/4：60s闲置时间 只要参数1 ,只要Runnable > 参数1 起作用(60s之内 就会复用之前的任务，60s之后就会回收任务)
+
+```java
+/**
+*  参数一：corePoolSize 核心线程数
+*  参数二：maximumPoolSize 最大线程数 线程池非核心线程数 线程池规定大小
+*  参数三/四：时间数值keepAliveTime， 单位：时分秒  60s 正在执行的任务Runnable20 < corePoolSize --> 参数三/参数四 才会起作用：Runnable1执行完毕后 闲置60s，如果过了闲置60s,会回收掉Runnable1任务,，如果在闲置时间60s 复用此线程Runnable1
+*  参数五：workQueue队列 ：会把超出的任务加入到队列中 缓存起来
+*  参数六：线程池工厂
+*/
+
+public synchronized ExecutorService executorService() {
+  if (executorService == null) {
+//（OKHTTP）永远只有一个线程在跑：MAX_VALUE 》 0 --> 参数三/参数四 才会起作用
+//Runnable1执行完毕后 闲置60s，如果在闲置时间60s内 复用此线程Runnable1,如果过了闲置60s,会回收掉Runnable1任务,
+    executorService = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS,
+        new SynchronousQueue<Runnable>(), Util.threadFactory("OkHttp Dispatcher", false));
+  }
+  return executorService;
+}
+```
+```java
+//        (okhttp)线程工厂
+ExecutorService executorService = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ThreadFactory() {
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread result = new Thread(r, "OkHttp Dispatcher");
+                result.setDaemon(false);
+                return result;
+            }
+        });
+```
+
+顶层接口
+
+- ​    // Executor
+- ​    // --- ExecutorService
+- ​    //   --- AbstractExecutorService
+- ​    //      ---- ThreadPoolExecutor
+
+```java
+public interface Executor {
+
+    /**
+     * Executes the given command at some time in the future.  The command
+     * may execute in a new thread, in a pooled thread, or in the calling
+     * thread, at the discretion of the {@code Executor} implementation.
+     *
+     * @param command the runnable task
+     * @throws RejectedExecutionException if this task cannot be
+     * accepted for execution
+     * @throws NullPointerException if command is null
+     */
+    void execute(Runnable command);//必须为Runnable
+}
+```
+
+```java
+public interface ExecutorService extends Executor {}
+```
+
+```java
+public abstract class AbstractExecutorService implements ExecutorService {}
+```
+
+```java
+public class ThreadPoolExecutor extends AbstractExecutorService {}
+```
+
+```java
+// Java设计者 考虑到了不用使用线程池的参数配置，提供了API包装
+/**
+* new ThreadPoolExecutor(0, Integer.MAX_VALUE,60L, TimeUnit.SECONDS,new SynchronousQueue<Runnable>());
+*/
+ExecutorService executorService = Executors.newCachedThreadPool();//缓存线程池
+/**
+* new ThreadPoolExecutor(1, 1,0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>()));
+*/
+ExecutorService executorService = Executors.newSingleThreadExecutor();//单例，线程池里只有一个核心线程，最大线程也一个
+/**
+* new ThreadPoolExecutor(nThreads, nThreads,0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
+*/
+ExecutorService executorService = Executors.newFixedThreadPool(5);//固定线程池，线程池里有N个核心线程，N个最大线程
 ```
