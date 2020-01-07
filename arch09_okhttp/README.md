@@ -129,10 +129,10 @@ Response getResponseWithInterceptorChain() throws IOException {
   // Build a full stack of interceptors.
   List<Interceptor> interceptors = new ArrayList<>();
   interceptors.addAll(client.interceptors());//用户自定义的拦截器
-  interceptors.add(retryAndFollowUpInterceptor);
-  interceptors.add(new BridgeInterceptor(client.cookieJar()));
-  interceptors.add(new CacheInterceptor(client.internalCache()));
-  interceptors.add(new ConnectInterceptor(client));
+  interceptors.add(retryAndFollowUpInterceptor);//重试与重定向拦截器
+  interceptors.add(new BridgeInterceptor(client.cookieJar()));//请求头处理拦截器
+  interceptors.add(new CacheInterceptor(client.internalCache()));//缓存拦截器
+  interceptors.add(new ConnectInterceptor(client));//服务器真实请求拦截器
   if (!forWebSocket) {
     interceptors.addAll(client.networkInterceptors());
   }

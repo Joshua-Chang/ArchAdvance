@@ -10,6 +10,11 @@ public class Request2 {
     private String url;
     private String requestMethod=GET;
     private Map<String,String>mHeaderList=new HashMap<>();
+    private RequestBody2 requestBody2;
+
+    public RequestBody2 getRequestBody2() {
+        return requestBody2;
+    }
 
     public String getUrl() {
         return url;
@@ -31,12 +36,20 @@ public class Request2 {
         this.url=builder.url;
         this.requestMethod=builder.requestMethod;
         this.mHeaderList=builder.mHeaderList;
+        this.requestBody2 = builder.requestBody2;
     }
 
     public static final class Builder{
         private String url;
         private String requestMethod=GET;
         private Map<String,String>mHeaderList=new HashMap<>();
+        private RequestBody2 requestBody2;
+
+        public Builder post(RequestBody2 requestBody2) {
+            requestMethod = POST;
+            this.requestBody2 = requestBody2;
+            return this;
+        }
 
         public Builder url(String url) {
             this.url = url;

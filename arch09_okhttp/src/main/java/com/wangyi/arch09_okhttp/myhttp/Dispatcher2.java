@@ -54,7 +54,16 @@ public class Dispatcher2 {
         return result;
     }
 
-    public void finished(RealCall2.AsyncCall2 asyncCall2) {
+    public void finished(RealCall2.AsyncCall2 call2) {
+        runningAsyncCalls.remove(call2);
+        if (readyAsyncCalls.isEmpty()) {//是否还有等待的任务需要执行
+            return;
+        }
+        for (RealCall2.AsyncCall2 readyAsyncCall : readyAsyncCalls) {//移动等待队列去运行队列
+            readyAsyncCalls.remove(readyAsyncCall);
+            runningAsyncCalls.add(readyAsyncCall);
+            executorService().execute(readyAsyncCall);//执行完再回收，添加-回收循环
+        }
 
     }
 }
