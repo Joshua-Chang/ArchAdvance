@@ -6,6 +6,8 @@ import android.util.Log;
 import com.example.arch10_glide.Cons;
 import com.example.arch10_glide.Tool;
 
+import static com.example.arch10_glide.Cons.TAG;
+
 /**
  * 对Bitmap的封装
  */
@@ -33,7 +35,7 @@ public class Value {
     public void useAction() {
         Tool.checkNotEmpty(bitmap);
         if (bitmap.isRecycled()) {
-            Log.e(Cons.TAG, "useAction--isRecycled :" + count);
+            Log.e(TAG, "useAction--isRecycled :" + count);
             return;
         }
         count++;
@@ -42,18 +44,20 @@ public class Value {
     private ValueCallback callback;
 
     public void useFinishAction() {
-        if (count-- <= 0 && callback != null) {//不再使用，回调给外部
+        count--;
+        if (count <= 0 && callback != null) {//不再使用，回调给外部
             callback.valueUseFinishListener(key, this);
         }
+        Log.d(TAG, "useAction: 减一 count:" + count);
     }
 
     public void recyclerBitmap() {
         if (count > 0) {
-            Log.e(Cons.TAG, "recyclerBitmap--还在使用中 ");
+            Log.e(TAG, "recyclerBitmap--还在使用中 ");
             return;
         }
         if (bitmap.isRecycled()) {
-            Log.e(Cons.TAG, "recyclerBitmap--isRecycled ");
+            Log.e(TAG, "recyclerBitmap--isRecycled ");
             return;
         }
         value=null;

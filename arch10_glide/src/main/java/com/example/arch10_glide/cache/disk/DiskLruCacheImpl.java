@@ -17,7 +17,7 @@ public class DiskLruCacheImpl {
 
     private final int APP_VERSION = 1; // 我们的版本号，一旦修改这个版本号，之前的缓存失效
     private final int VALUE_COUNT = 1; // 通常情况下都是1
-    private final long MAX_SIZE = 1024 * 1024 * 10; // 以后修改成 使用者可以设置的
+    private final long MAX_SIZE = 1024 * 1024 * 100; // 以后修改成 使用者可以设置的
 
     private DiskLruCache diskLruCache;
 
@@ -67,7 +67,7 @@ public class DiskLruCacheImpl {
         InputStream inputStream = null;
         try {
             DiskLruCache.Snapshot snapshot = diskLruCache.get(k);
-            if (snapshot != null) {
+            if (null!=snapshot) {
                 Value value = Value.getInstance();
                 inputStream = snapshot.getInputStream(0);
                 Bitmap bitmap = BitmapFactory.decodeStream(inputStream);

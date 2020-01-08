@@ -26,7 +26,7 @@ public class RequestManager {
 
     // 构造代码块，不用再所有的构造方法里面去实例化了，统一的去写
     {
-        if (requestTargetEngine == null) {
+        if (null==requestTargetEngine ) {
             requestTargetEngine = new RequestTargetEngine();
         }
     }
@@ -37,6 +37,7 @@ public class RequestManager {
      */
     public RequestManager(FragmentActivity activity) {
         requestManagerContext=activity;
+        this.fragmentActivity = activity;
         FragmentManager supportFragmentManager = activity.getSupportFragmentManager();
         Fragment fragment = supportFragmentManager.findFragmentByTag(FRAGMENT_ACTIVITY_NAME);
         if (fragment == null) {
@@ -66,7 +67,7 @@ public class RequestManager {
             fragment=new ActivityFragmentManager(requestTargetEngine);
             fragmentManager.beginTransaction()
                     .add(fragment,ACTIVITY_NAME)
-                    .commitNowAllowingStateLoss();
+                    .commitAllowingStateLoss();
         }
         // 发送一次Handler
         mHandler.sendEmptyMessage(NEXT_HANDLER_MSG);
@@ -94,14 +95,17 @@ public class RequestManager {
     public RequestTargetEngine load(String path){
         // 移除Handler
         mHandler.removeMessages(NEXT_HANDLER_MSG);
-
+        // 把值传递给 资源加载引擎
+        requestTargetEngine.loadValueInitAction(path, requestManagerContext);
         return requestTargetEngine;
     }
 
     private Handler mHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            Fragment fragment2 = ((FragmentActivity)requestManagerContext).getSupportFragmentManager().findFragmentByTag(FRAGMENT_ACTIVITY_NAME);
+//            Fragment fragment2 = ((FragmentActivity)requestManagerContext).getSupportFragmentManager().findFragmentByTag(FRAGMENT_ACTIVITY_NAME);
+            Fragment fragment2 = fragmentActivity.getSupportFragmentManager().findFragmentByTag(FRAGMENT_ACTIVITY_NAME);
+
             Log.d(TAG, "Handler: fragment2" + fragment2); // 有值 ： 不在排队中，所以有值
             return false;
         }
