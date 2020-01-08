@@ -1,5 +1,9 @@
 package com.example.arch10_glide;
 
+import com.example.arch10_glide.cache.MemoryCache;
+import com.example.arch10_glide.cache.MemoryCacheCallback;
+import com.example.arch10_glide.resource.Value;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,4 +18,5 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
 }

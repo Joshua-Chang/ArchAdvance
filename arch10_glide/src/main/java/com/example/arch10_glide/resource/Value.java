@@ -16,8 +16,8 @@ public class Value {
 
     private static Value value;
 
-    private Value() {
-    }
+//    private Value() {
+//    }
 
     public static Value getInstance() {
         if (null==value) {
