@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
+import com.example.arch10_glide.Tool;
+import com.example.arch10_glide.pool.BitmapPool;
 import com.example.arch10_glide.resource.Value;
 
 import java.io.File;
@@ -63,14 +65,31 @@ public class DiskLruCacheImpl {
         }
     }
 
-    public Value get(String k) {
+    public Value get(String k, BitmapPool bitmapPool) {
         InputStream inputStream = null;
         try {
             DiskLruCache.Snapshot snapshot = diskLruCache.get(k);
             if (null!=snapshot) {
                 Value value = Value.getInstance();
                 inputStream = snapshot.getInputStream(0);
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+
+                int w = 1920;
+                int h = 1080;
+
+                // 使用复用池，拿去复用图片内存
+                BitmapFactory.Options options2 = new BitmapFactory.Options();
+                Bitmap bitmapPoolResult = bitmapPool.get(w, h, Bitmap.Config.RGB_565);
+                options2.inBitmap = bitmapPoolResult; // 如果我们这里拿到的是null，就不复用
+                options2.inMutable = true;
+                options2.inPreferredConfig = Bitmap.Config.RGB_565;
+                options2.inJustDecodeBounds = false;
+                // inSampleSize:是采样率，当inSampleSize为2时，一个2000 1000的图片，将被缩小为1000 500， 采样率为1 代表和原图宽高最接近
+                options2.inSampleSize = Tool.sampleBitmapSize(options2, w, h);
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options2); // 真正的加载
+
+
                 value.setBitmap(bitmap);
                 value.setKey(k);
                 return value;

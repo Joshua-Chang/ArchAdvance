@@ -11,6 +11,7 @@ import com.example.arch10_glide.cache.disk.DiskLruCacheImpl;
 import com.example.arch10_glide.fragment.LifecycleCallback;
 import com.example.arch10_glide.load_data.LoadDataManager;
 import com.example.arch10_glide.load_data.ResponseListener;
+import com.example.arch10_glide.pool.LruBitmapPool;
 import com.example.arch10_glide.resource.Key;
 import com.example.arch10_glide.resource.Value;
 import com.example.arch10_glide.resource.ValueCallback;
@@ -79,7 +80,8 @@ public class RequestTargetEngine implements LifecycleCallback, ValueCallback, Me
             return value;
         }
         // TODO 第三步，从磁盘缓存中去找，如果找到了，把磁盘缓存中的元素 加入到 活动缓存中
-        value = diskLruCache.get(key);
+//        value = diskLruCache.get(key);
+        value = diskLruCache.get(key, lruBitmapPool);
         if (value != null) {
             // 把磁盘缓存中的元素 --> 加入到活动缓存中
             activeCache.put(key, value);
@@ -104,7 +106,7 @@ public class RequestTargetEngine implements LifecycleCallback, ValueCallback, Me
     private ActiveCache activeCache; // 活动缓存
     private MemoryCache memoryCache; // 内存缓存
     private DiskLruCacheImpl diskLruCache; // 磁盘缓存
-    // 复用池
+    private LruBitmapPool lruBitmapPool;  // 复用池
 
 
     public RequestTargetEngine() {
@@ -119,6 +121,9 @@ public class RequestTargetEngine implements LifecycleCallback, ValueCallback, Me
             diskLruCache=new DiskLruCacheImpl();
         }
         // TODO: 2020-01-08 初始化 复用池
+        if (lruBitmapPool == null) {
+            lruBitmapPool = new LruBitmapPool(MEMORY_MAX_SIZE);
+        }
     }
 
     /**
@@ -153,7 +158,7 @@ public class RequestTargetEngine implements LifecycleCallback, ValueCallback, Me
     @Override
     public void entryRemovedMemoryCache(String key, Value oldValue) {
         // 添加到复用池 ...... ，空留的功能点
-
+        lruBitmapPool.put(oldValue.getBitmap());
     }
 
     @Override

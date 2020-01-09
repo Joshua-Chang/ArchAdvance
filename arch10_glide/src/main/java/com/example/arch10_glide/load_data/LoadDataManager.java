@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.arch10_glide.Tool;
 import com.example.arch10_glide.resource.Value;
 
 import java.io.IOException;
@@ -47,7 +48,23 @@ public class LoadDataManager implements ILoadData, Runnable {
             final int responseCode = urlConnection.getResponseCode();
             if (HttpURLConnection.HTTP_OK==responseCode) {
                 inputStream = urlConnection.getInputStream();
-                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+//                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+
+                int w = 1920;
+                int h = 1080;
+
+                // 不需要使用复用池，拿去图片内存
+                BitmapFactory.Options options2 = new BitmapFactory.Options();
+                //   既然是外部网络加载图片，就不需要用复用池 Bitmap bitmapPoolResult = bitmapPool.get(w, h, Bitmap.Config.RGB_565);
+                //   options2.inBitmap = bitmapPoolResult; // 如果我们这里拿到的是null，就不复用
+                options2.inMutable = true;
+                options2.inPreferredConfig = Bitmap.Config.RGB_565;
+                options2.inJustDecodeBounds = false;
+                // inSampleSize:是采样率，当inSampleSize为2时，一个2000 1000的图片，将被缩小为1000 500， 采样率为1 代表和原图宽高最接近
+                options2.inSampleSize = Tool.sampleBitmapSize(options2, w, h);
+                final Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options2); // 真正的加载
+
                 // 成功 切换主线程
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
